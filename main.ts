@@ -16,8 +16,19 @@ if (/[\n\r]/.test(LINE)) {
   throw new Error("line must be a single line");
 }
 
+// Prompt fit: the excuse must name the thing that was eaten.
+if (!/\bsock\b/i.test(LINE)) {
+  throw new Error("line does not answer the prompt: no sock mentioned");
+}
+
+// Tightness: short and punchy, at most 30 words.
+const words = LINE.trim().split(/\s+/);
+if (words.length > 30) {
+  throw new Error(`line has ${words.length} words, over the 30-word cap`);
+}
+
 const outDir = process.env.MAKEFUN_OUTPUT_DIR || "/output";
 mkdirSync(outDir, { recursive: true });
 const outPath = join(outDir, "entry.txt");
 writeFileSync(outPath, LINE + "\n", "utf8");
-console.log(`wrote ${LINE.length} chars to ${outPath}`);
+console.log(`wrote ${LINE.length} chars, ${words.length} words to ${outPath}`);
